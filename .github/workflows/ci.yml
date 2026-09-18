@@ -29,3 +29,11 @@ jobs:
 
       - name: Validate pytest collection
         run: python -m pytest --collect-only -q
+
+      - name: Build and verify release archive
+        run: |
+          export SOURCE_DATE_EPOCH=$(git show -s --format=%ct "$GITHUB_SHA")
+          python tools/build_release.py --commit "$GITHUB_SHA"
+          cd dist
+          sha256sum --check *.sha256
+          python -c "import json,zipfile,glob; z=zipfile.ZipFile(glob.glob('*.zip')[0]); assert json.loads(z.read('manifest.json')) == json.load(open('manifest.json'))"
