@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "corpus_version": "4.14-r1",
+  "wazuh": {
+    "requires": ">=4.14.7,<4.15.0",
+    "tested": [
+      "4.14.7"
+    ]
+  },
+  "python": {
+    "requires": ">=3.10"
+  },
+  "wazuhtester": {
+    "requires": ">=0.1,<0.2"
+  },
+  "generator": {
+    "name": "wazuh-testgen"
+  }
+}
