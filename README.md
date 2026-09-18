@@ -36,7 +36,7 @@ The account running pytest must be able to access the Wazuh logtest socket, norm
 
 ## Compatibility
 
-Source compatibility is declared in `corpus.json`. The first corpus series targets Wazuh 4.14 and is qualified against Wazuh 4.14.7.
+Source compatibility is declared in `corpus.json`. The first corpus series targets Wazuh 4.14, with Wazuh 4.14.7 as its release qualification target. A published release therefore implies that its live 4.14.7 qualification gate passed.
 
 Released archives contain a generated `manifest.json` with immutable source provenance in addition to the static compatibility metadata.
 
