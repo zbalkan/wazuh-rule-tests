@@ -58,7 +58,15 @@ def main() -> int:
     manifest_path.write_bytes(manifest_bytes)
 
     members = [ROOT / "LICENSE", ROOT / "README.md"]
-    members.extend(sorted((ROOT / "tests").glob("test_*.py")))
+    members.extend(
+        sorted(
+            path
+            for path in (ROOT / "tests").rglob("*")
+            if path.is_file()
+            and "__pycache__" not in path.parts
+            and path.suffix != ".pyc"
+        )
+    )
 
     with zipfile.ZipFile(target, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         write_bytes(archive, "manifest.json", manifest_bytes)
