@@ -29,8 +29,8 @@ def validate_metadata() -> None:
         fail("unsupported corpus schema version")
     if not CORPUS_VERSION.fullmatch(str(data["corpus_version"])):
         fail("corpus_version must use <wazuh-series>-r<revision>")
-    if not data["wazuh"].get("requires") or not data["wazuh"].get("tested"):
-        fail("wazuh compatibility must include requires and tested")
+    if not data["wazuh"].get("requires") or not data["wazuh"].get("qualification_target"):
+        fail("wazuh compatibility must include requires and qualification_target")
     if not data["wazuhtester"].get("requires"):
         fail("wazuhtester compatibility is required")
 
