@@ -82,4 +82,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME"             dist/*.zip             dist/*.sha256             --title "Wazuh rule tests $GITHUB_REF_NAME"             --generate-notes
+          gh release create "$GITHUB_REF_NAME" \
+            dist/manifest.json \
+            dist/*.zip \
+            dist/*.sha256 \
+            --title "Wazuh rule tests $GITHUB_REF_NAME" \
+            --generate-notes
