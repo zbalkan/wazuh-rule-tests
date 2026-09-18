@@ -36,12 +36,13 @@ def validate_metadata() -> None:
 
 
 def validate_tests() -> None:
-    files = sorted(TESTS.glob("test_*.py"))
-    if not files:
+    python_files = sorted(TESTS.rglob("*.py"))
+    test_files = [path for path in python_files if path.name.startswith("test_")]
+    if not test_files:
         fail("no pytest files found")
 
     forbidden_roots = {"internal", "wazuh_devenv", "wazuhdevenv"}
-    for path in files:
+    for path in python_files:
         try:
             tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
         except SyntaxError as exc:
@@ -61,10 +62,10 @@ def validate_tests() -> None:
             if "wazuhtester" in roots:
                 imports_wazuhtester = True
 
-        if not imports_wazuhtester:
+        if path in test_files and not imports_wazuhtester:
             fail(f"{path}: does not import the public wazuhtester API")
 
-    print(f"Validated {len(files)} pytest files.")
+    print(f"Validated {len(test_files)} pytest files and {len(python_files)} Python files.")
 
 
 def main() -> int:
