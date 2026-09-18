@@ -36,6 +36,15 @@ jobs:
       - name: Validate corpus
         run: python tools/validate_corpus.py
 
+      - name: Build release archive
+        run: |
+          export SOURCE_DATE_EPOCH=$(git show -s --format=%ct "$GITHUB_SHA")
+          python tools/build_release.py --commit "$GITHUB_SHA"
+          cd dist
+          sha256sum --check *.sha256
+          cd ..
+          python -c "import glob,zipfile; zipfile.ZipFile(glob.glob('dist/*.zip')[0]).extractall('dist/qualified')"
+
       - name: Install Wazuh manager
         env:
           WAZUH_VERSION: "4.14.7-1"
@@ -66,17 +75,7 @@ jobs:
       - name: Run live Wazuh regression corpus
         run: |
           python_path=$(command -v python)
-          sg wazuh -c "$python_path -m pytest -v --wazuh-require-logtest"
-
-      - name: Build release archive
-        run: |
-          export SOURCE_DATE_EPOCH=$(git show -s --format=%ct "$GITHUB_SHA")
-          python tools/build_release.py --commit "$GITHUB_SHA"
-
-      - name: Verify archive checksum
-        run: |
-          cd dist
-          sha256sum --check *.sha256
+          sg wazuh -c "$python_path -m pytest dist/qualified/tests -v --wazuh-require-logtest"
 
       - name: Create GitHub release
         env:
