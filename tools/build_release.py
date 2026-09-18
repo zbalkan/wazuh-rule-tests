@@ -53,16 +53,15 @@ def main() -> int:
     version = metadata["corpus_version"]
     args.output_dir.mkdir(parents=True, exist_ok=True)
     target = args.output_dir / f"wazuh-rule-tests-{version}.zip"
+    manifest_path = args.output_dir / "manifest.json"
+    manifest_bytes = (json.dumps(manifest, indent=2, sort_keys=True) + "\n").encode("utf-8")
+    manifest_path.write_bytes(manifest_bytes)
 
     members = [ROOT / "LICENSE", ROOT / "README.md"]
     members.extend(sorted((ROOT / "tests").glob("test_*.py")))
 
     with zipfile.ZipFile(target, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
-        write_bytes(
-            archive,
-            "manifest.json",
-            (json.dumps(manifest, indent=2, sort_keys=True) + "\n").encode("utf-8"),
-        )
+        write_bytes(archive, "manifest.json", manifest_bytes)
         for path in members:
             write_bytes(archive, path.relative_to(ROOT).as_posix(), path.read_bytes())
 
@@ -70,6 +69,7 @@ def main() -> int:
     checksum = target.with_suffix(target.suffix + ".sha256")
     checksum.write_text(f"{digest}  {target.name}\n", encoding="ascii")
 
+    print(manifest_path)
     print(target)
     print(checksum)
     return 0
