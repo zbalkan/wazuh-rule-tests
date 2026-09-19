@@ -71,6 +71,9 @@ def validate_metadata() -> tuple[dict[str, object], Path]:
         fail("corpus version and Wazuh qualification target must match")
     if wazuh.get("requires") != f"=={target}":
         fail("schema v1 requires exact Wazuh compatibility with the qualification target")
+    source_version = str(wazuh.get("source_version", ""))
+    if not re.fullmatch(r"\d+\.\d+\.\d+", source_version):
+        fail("wazuh source_version must be an explicit semantic version")
 
     wazuhtester = data["wazuhtester"]
     if not isinstance(wazuhtester, dict) or not wazuhtester.get("requires"):
@@ -111,12 +114,46 @@ def validate_provenance(
     wazuh = metadata["wazuh"]
     assert isinstance(wazuh, dict)
     target = str(wazuh["qualification_target"])
-    if upstream.get("ref") != target:
-        fail("upstream ref must match the Wazuh qualification target")
+    source_version = str(wazuh["source_version"])
+    if upstream.get("ref") != source_version:
+        fail("upstream ref must match the Wazuh source_version")
     if not COMMIT_SHA.fullmatch(str(upstream.get("commit", ""))):
         fail("upstream commit must be a full Git commit SHA")
     if upstream.get("path") != "ruleset/testing/tests":
         fail("unexpected upstream test source path")
+
+    equivalence = inventory.get("equivalent_ruleset_snapshots")
+    if not isinstance(equivalence, dict):
+        fail("source inventory must contain equivalent_ruleset_snapshots")
+    if equivalence.get("scope") != [
+        "ruleset/rules",
+        "ruleset/decoders",
+        "ruleset/testing/tests",
+    ]:
+        fail("ruleset equivalence scope is incomplete")
+    if equivalence.get("file_count") != 395:
+        fail("unexpected ruleset equivalence file count")
+
+    snapshots = equivalence.get("snapshots")
+    if not isinstance(snapshots, list):
+        fail("ruleset equivalence snapshots must be a list")
+
+    snapshot_by_ref: dict[str, str] = {}
+    for snapshot in snapshots:
+        if not isinstance(snapshot, dict):
+            fail("ruleset equivalence snapshot must be an object")
+        ref = str(snapshot.get("ref", ""))
+        commit = str(snapshot.get("commit", ""))
+        if not ref or not COMMIT_SHA.fullmatch(commit):
+            fail("ruleset equivalence snapshot must include ref and full commit SHA")
+        snapshot_by_ref[ref] = commit
+
+    if target not in snapshot_by_ref:
+        fail("qualification target is absent from ruleset equivalence evidence")
+    if source_version not in snapshot_by_ref:
+        fail("source version is absent from ruleset equivalence evidence")
+    if snapshot_by_ref[source_version] != str(upstream.get("commit", "")):
+        fail("source-version equivalence commit differs from upstream source commit")
 
     source_files = inventory.get("source_files")
     excluded = inventory.get("excluded")
