@@ -8,7 +8,7 @@ The corpus is content, not a Python package. Tests use the public [wazuhtester](
 
 ## Source provenance
 
-The first corpus is generated from the Wazuh `4.14.10` ruleset-testing snapshot:
+The test content was generated from the Wazuh `4.14.10` ruleset-testing snapshot:
 
 ```text
 repository: https://github.com/wazuh/wazuh
@@ -39,7 +39,7 @@ The exclusions are intentional:
 - `unbound.ini` has all test conditions commented out upstream;
 - `win_application.ini` has all test conditions commented out upstream.
 
-`tools/validate_corpus.py` verifies this partition and fails if an included upstream INI has no generated pytest module, if a generated module has no source INI, or if its provenance marker is missing.
+`tools/validate_corpus.py` verifies this partition and fails if an included upstream INI has no generated pytest module, if a generated module has no source INI, or if its provenance marker is missing. The same source inventory also records the verified ruleset equivalence between Wazuh 4.14.8, 4.14.9, and 4.14.10 across `ruleset/rules`, `ruleset/decoders`, and `ruleset/testing/tests`: 395 files with no differences at the recorded commits.
 
 ## Development use
 
@@ -76,16 +76,18 @@ Compatibility is declared in `corpus.json`.
 The initial corpus is:
 
 ```text
-4.14.10-r1
+4.14.8-r1
 ```
 
 and is deliberately restricted to:
 
 ```text
-Wazuh == 4.14.10
+Wazuh == 4.14.8
 ```
 
-The source snapshot is from the unreleased Wazuh `4.14.10` branch. The compatibility range must not be broadened until the corpus has been qualified against additional Wazuh versions.
+The generated content remains provenance-linked to the newer Wazuh `4.14.10` source snapshot. This is intentional: the recorded 4.14.8, 4.14.9, and 4.14.10 branch heads have identical rule, decoder, and ruleset-test content across all 395 relevant files. Wazuh 4.14.8 is therefore used as the first runtime qualification target because it is the earliest package target for which this exact corpus content is known to be applicable.
+
+The compatibility range remains exact until live qualification justifies broadening it.
 
 Corpus versions use:
 
@@ -96,12 +98,12 @@ Corpus versions use:
 For example:
 
 ```text
-4.14.10-r1
-4.14.10-r2
+4.14.8-r1
+4.14.8-r2
 4.15.0-r1
 ```
 
-The revision increments when tests or corpus metadata change without changing the Wazuh source/qualification version.
+The revision increments when tests or corpus metadata change without changing the Wazuh qualification version.
 
 ## Releases
 
@@ -129,7 +131,7 @@ The generated `manifest.json` records:
 
 Release tags must match the `corpus_version` in `corpus.json`. The release workflow installs the declared Wazuh qualification target, executes the exact extracted release ZIP against `wazuh-logtest`, and only then creates the GitHub release.
 
-Because Wazuh 4.14.10 is currently unreleased, the first corpus release remains blocked until a matching Wazuh Manager package is available or an equivalent qualification mechanism is deliberately introduced.
+The first corpus release is gated on the availability of the Wazuh 4.14.8 Manager package and a successful live execution of the exact extracted release artifact against that package.
 
 Consumers such as `wazuh-devenv` should use the release manifest as the compatibility contract rather than inferring compatibility from the archive filename.
 
