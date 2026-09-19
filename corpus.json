@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "corpus_version": "4.14.8-r1",
+  "corpus_version": "4.14.8-r2",
   "source_inventory": "source/wazuh-4.14.10.json",
   "wazuh": {
     "source_version": "4.14.10",
