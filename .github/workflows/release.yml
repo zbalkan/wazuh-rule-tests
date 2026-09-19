@@ -45,9 +45,12 @@ jobs:
           cd ..
           python -c "import glob,zipfile; zipfile.ZipFile(glob.glob('dist/*.zip')[0]).extractall('dist/qualified')"
 
+      - name: Resolve Wazuh qualification target
+        run: |
+          qualification_target=$(python -c "import json; print(json.load(open('corpus.json'))['wazuh']['qualification_target'])")
+          echo "WAZUH_VERSION=$qualification_target" >> "$GITHUB_ENV"
+
       - name: Install Wazuh manager
-        env:
-          WAZUH_VERSION: "4.14.7-1"
         run: |
           sudo apt-get update
           sudo apt-get install -y curl gnupg apt-transport-https
@@ -57,7 +60,7 @@ jobs:
           echo "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main" |
             sudo tee /etc/apt/sources.list.d/wazuh.list >/dev/null
           sudo apt-get update
-          sudo apt-get install -y "wazuh-manager=$WAZUH_VERSION"
+          sudo apt-get install -y "wazuh-manager=$WAZUH_VERSION-1"
           sudo systemctl enable --now wazuh-manager
 
       - name: Wait for wazuh-logtest
