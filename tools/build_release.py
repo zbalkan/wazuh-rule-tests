@@ -41,8 +41,21 @@ def main() -> int:
     args = parser.parse_args()
 
     metadata = json.loads((ROOT / "corpus.json").read_text(encoding="utf-8"))
+    inventory_path = ROOT / metadata["source_inventory"]
+    inventory_bytes = inventory_path.read_bytes()
+    inventory = json.loads(inventory_bytes)
+    excluded = inventory["excluded"]
+    source_files = inventory["source_files"]
+
     manifest = {
         **metadata,
+        "upstream": inventory["upstream"],
+        "coverage": {
+            "source_files": len(source_files),
+            "included": len(source_files) - len(excluded),
+            "excluded": len(excluded),
+        },
+        "source_inventory_sha256": hashlib.sha256(inventory_bytes).hexdigest(),
         "source": {
             "repository": "https://github.com/zbalkan/wazuh-rule-tests",
             "content_commit": args.commit,
@@ -57,7 +70,7 @@ def main() -> int:
     manifest_bytes = (json.dumps(manifest, indent=2, sort_keys=True) + "\n").encode("utf-8")
     manifest_path.write_bytes(manifest_bytes)
 
-    members = [ROOT / "LICENSE", ROOT / "README.md"]
+    members = [ROOT / "LICENSE", ROOT / "README.md", inventory_path]
     members.extend(
         sorted(
             path
