@@ -1,10 +1,11 @@
 {
   "schema_version": 1,
-  "corpus_version": "4.14.10-r1",
+  "corpus_version": "4.14.8-r1",
   "source_inventory": "source/wazuh-4.14.10.json",
   "wazuh": {
-    "requires": "==4.14.10",
-    "qualification_target": "4.14.10"
+    "source_version": "4.14.10",
+    "requires": "==4.14.8",
+    "qualification_target": "4.14.8"
   },
   "python": {
     "requires": ">=3.10"
