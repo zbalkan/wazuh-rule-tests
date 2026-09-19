@@ -1,2 +1,2 @@
 pytest>=8,<10
-wazuhtester>=0.1,<0.2
+wazuhtester>=0.1.0rc1,<0.2
