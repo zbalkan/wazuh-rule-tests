@@ -73,10 +73,10 @@ The account running pytest must be able to access the Wazuh logtest socket, norm
 
 Compatibility is declared in `corpus.json`.
 
-The initial corpus is:
+The current corpus revision is:
 
 ```text
-4.14.8-r1
+4.14.8-r2
 ```
 
 and is deliberately restricted to:
