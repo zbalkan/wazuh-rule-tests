@@ -4,7 +4,7 @@
   "source_inventory": "source/wazuh-4.14.10.json",
   "wazuh": {
     "source_version": "4.14.7",
-    "requires": ">=4.14.7",
+    "requires": "==4.14.7",
     "qualification_target": "4.14.7"
   },
   "python": {
