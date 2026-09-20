@@ -1,10 +1,12 @@
 {
-  "schema_version": 1,
   "upstream": {
     "repository": "https://github.com/wazuh/wazuh",
-    "ref": "4.14.10",
     "commit": "eb4901c2d35f35aaa298463798b74704d569e4a6",
     "path": "ruleset/testing/tests"
+  },
+  "generator": {
+    "repository": "https://github.com/zbalkan/wazuh-testgen",
+    "commit": "b2c38d0c41b9e3792bab2eed61f1ec130fe8beb1"
   },
   "source_files": [
     "amazon_sec_lake.ini",
@@ -128,27 +130,5 @@
     "test_static_filters_geoip.ini": "ruleset static-filter/GeoIP engine test, not a rule regression test",
     "unbound.ini": "all upstream test conditions are commented out",
     "win_application.ini": "all upstream test conditions are commented out"
-  },
-  "equivalent_ruleset_snapshots": {
-    "scope": [
-      "ruleset/rules",
-      "ruleset/decoders",
-      "ruleset/testing/tests"
-    ],
-    "file_count": 395,
-    "snapshots": [
-      {
-        "ref": "4.14.8",
-        "commit": "f470ad7db717b18db7feeed568949643698f0f34"
-      },
-      {
-        "ref": "4.14.9",
-        "commit": "7cb8f727184f7296680f92689a8f7bac183849c9"
-      },
-      {
-        "ref": "4.14.10",
-        "commit": "eb4901c2d35f35aaa298463798b74704d569e4a6"
-      }
-    ]
   }
 }

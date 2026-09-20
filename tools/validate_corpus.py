@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate corpus metadata, provenance, and test dependency boundaries."""
+"""Validate the corpus source inventory and test dependency boundaries."""
 
 from __future__ import annotations
 
@@ -11,8 +11,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CORPUS = ROOT / "corpus.json"
+INVENTORY = ROOT / "source" / "inventory.json"
 TESTS = ROOT / "tests"
-CORPUS_VERSION = re.compile(r"^(\d+\.\d+\.\d+)-r([1-9]\d*)$")
+VERSION = re.compile(r"^\d+\.\d+\.\d+$")
 COMMIT_SHA = re.compile(r"^[0-9a-f]{40}$")
 INVALID_IDENTIFIER_CHARS = re.compile(r"[^0-9A-Za-z_]+")
 REPEATED_UNDERSCORES = re.compile(r"_+")
@@ -42,118 +43,33 @@ def load_json(path: Path) -> dict[str, object]:
     return data
 
 
-def validate_metadata() -> tuple[dict[str, object], Path]:
-    data = load_json(CORPUS)
-    required = {
-        "schema_version",
-        "corpus_version",
-        "source_inventory",
-        "wazuh",
-        "python",
-        "wazuhtester",
-        "generator",
-    }
-    missing = sorted(required - data.keys())
-    if missing:
-        fail(f"corpus.json missing keys: {', '.join(missing)}")
-    if data["schema_version"] != 1:
-        fail("unsupported corpus schema version")
-
-    version_match = CORPUS_VERSION.fullmatch(str(data["corpus_version"]))
-    if not version_match:
-        fail("corpus_version must use <wazuh-version>-r<revision>")
-
-    wazuh = data["wazuh"]
-    if not isinstance(wazuh, dict):
-        fail("wazuh metadata must be an object")
-    target = str(wazuh.get("qualification_target", ""))
-    if target != version_match.group(1):
-        fail("corpus version and Wazuh qualification target must match")
-    if wazuh.get("requires") != f"=={target}":
-        fail("schema v1 requires exact Wazuh compatibility with the qualification target")
-    source_version = str(wazuh.get("source_version", ""))
-    if not re.fullmatch(r"\d+\.\d+\.\d+", source_version):
-        fail("wazuh source_version must be an explicit semantic version")
-
-    wazuhtester = data["wazuhtester"]
-    if not isinstance(wazuhtester, dict) or not wazuhtester.get("requires"):
-        fail("wazuhtester compatibility is required")
-
-    generator = data["generator"]
-    if not isinstance(generator, dict):
-        fail("generator metadata must be an object")
-    if generator.get("name") != "wazuh-testgen":
-        fail("generator must identify wazuh-testgen")
-    if not COMMIT_SHA.fullmatch(str(generator.get("commit", ""))):
-        fail("generator commit must be a full Git commit SHA")
-
-    inventory_value = str(data["source_inventory"])
-    inventory_path = (ROOT / inventory_value).resolve()
-    try:
-        inventory_path.relative_to(ROOT)
-    except ValueError:
-        fail("source_inventory must stay within the repository")
-    if not inventory_path.is_file():
-        fail(f"source inventory does not exist: {inventory_value}")
-
-    return data, inventory_path
+def validate_metadata() -> None:
+    metadata = load_json(CORPUS)
+    version = metadata.get("version")
+    if not isinstance(version, str) or not VERSION.fullmatch(version):
+        fail("version must use X.Y.Z")
 
 
-def validate_provenance(
-    metadata: dict[str, object],
-    inventory_path: Path,
-) -> dict[str, str]:
-    inventory = load_json(inventory_path)
-    if inventory.get("schema_version") != 1:
-        fail("unsupported source inventory schema version")
+def validate_inventory() -> dict[str, str]:
+    inventory = load_json(INVENTORY)
 
     upstream = inventory.get("upstream")
     if not isinstance(upstream, dict):
         fail("source inventory must contain upstream metadata")
-
-    wazuh = metadata["wazuh"]
-    assert isinstance(wazuh, dict)
-    target = str(wazuh["qualification_target"])
-    source_version = str(wazuh["source_version"])
-    if upstream.get("ref") != source_version:
-        fail("upstream ref must match the Wazuh source_version")
+    if not isinstance(upstream.get("repository"), str) or not upstream["repository"]:
+        fail("upstream repository is required")
     if not COMMIT_SHA.fullmatch(str(upstream.get("commit", ""))):
         fail("upstream commit must be a full Git commit SHA")
-    if upstream.get("path") != "ruleset/testing/tests":
-        fail("unexpected upstream test source path")
+    if not isinstance(upstream.get("path"), str) or not upstream["path"]:
+        fail("upstream path is required")
 
-    equivalence = inventory.get("equivalent_ruleset_snapshots")
-    if not isinstance(equivalence, dict):
-        fail("source inventory must contain equivalent_ruleset_snapshots")
-    if equivalence.get("scope") != [
-        "ruleset/rules",
-        "ruleset/decoders",
-        "ruleset/testing/tests",
-    ]:
-        fail("ruleset equivalence scope is incomplete")
-    if equivalence.get("file_count") != 395:
-        fail("unexpected ruleset equivalence file count")
-
-    snapshots = equivalence.get("snapshots")
-    if not isinstance(snapshots, list):
-        fail("ruleset equivalence snapshots must be a list")
-
-    snapshot_by_ref: dict[str, str] = {}
-    for snapshot in snapshots:
-        if not isinstance(snapshot, dict):
-            fail("ruleset equivalence snapshot must be an object")
-        ref = str(snapshot.get("ref", ""))
-        commit = str(snapshot.get("commit", ""))
-        if not ref or not COMMIT_SHA.fullmatch(commit):
-            fail("ruleset equivalence snapshot must include ref and full commit SHA")
-        snapshot_by_ref[ref] = commit
-
-    if target not in snapshot_by_ref:
-        fail("qualification target is absent from ruleset equivalence evidence")
-    if source_version not in snapshot_by_ref:
-        fail("source version is absent from ruleset equivalence evidence")
-    if snapshot_by_ref[source_version] != str(upstream.get("commit", "")):
-        fail("source-version equivalence commit differs from upstream source commit")
+    generator = inventory.get("generator")
+    if not isinstance(generator, dict):
+        fail("source inventory must contain generator metadata")
+    if not isinstance(generator.get("repository"), str) or not generator["repository"]:
+        fail("generator repository is required")
+    if not COMMIT_SHA.fullmatch(str(generator.get("commit", ""))):
+        fail("generator commit must be a full Git commit SHA")
 
     source_files = inventory.get("source_files")
     excluded = inventory.get("excluded")
@@ -251,8 +167,8 @@ def validate_tests(expected_modules: dict[str, str]) -> None:
 
 
 def main() -> int:
-    metadata, inventory_path = validate_metadata()
-    expected_modules = validate_provenance(metadata, inventory_path)
+    validate_metadata()
+    expected_modules = validate_inventory()
     validate_tests(expected_modules)
     return 0
 

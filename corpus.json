@@ -1,21 +1,3 @@
 {
-  "schema_version": 1,
-  "corpus_version": "4.14.7-r2",
-  "source_inventory": "source/wazuh-4.14.10.json",
-  "wazuh": {
-    "source_version": "4.14.7",
-    "requires": "==4.14.7",
-    "qualification_target": "4.14.7"
-  },
-  "python": {
-    "requires": ">=3.10"
-  },
-  "wazuhtester": {
-    "requires": ">=0.1.0rc1,<0.2"
-  },
-  "generator": {
-    "name": "wazuh-testgen",
-    "repository": "https://github.com/zbalkan/wazuh-testgen",
-    "commit": "b2c38d0c41b9e3792bab2eed61f1ec130fe8beb1"
-  }
+  "version": "4.14.7"
 }

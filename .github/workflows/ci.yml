@@ -36,4 +36,19 @@ jobs:
           python tools/build_release.py --commit "$GITHUB_SHA"
           cd dist
           sha256sum --check *.sha256
-          python -c "import json,zipfile,glob; z=zipfile.ZipFile(glob.glob('*.zip')[0]); assert json.loads(z.read('manifest.json')) == json.load(open('manifest.json'))"
+          cd ..
+          python - <<'PY'
+          import glob
+          import json
+          import zipfile
+
+          version = json.load(open("corpus.json", encoding="utf-8"))["version"]
+          manifest = json.load(open("dist/manifest.json", encoding="utf-8"))
+          archive = glob.glob("dist/*.zip")[0]
+
+          with zipfile.ZipFile(archive) as zf:
+              archived_manifest = json.loads(zf.read("manifest.json"))
+
+          assert archived_manifest == manifest
+          assert manifest["version"] == version
+          PY

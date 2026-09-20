@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a versioned wazuh-rule-tests release archive."""
+"""Build the wazuh-rule-tests release archive and manifest."""
 
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+INVENTORY = ROOT / "source" / "inventory.json"
 
 
 def build_timestamp() -> str:
@@ -36,20 +37,20 @@ def write_bytes(archive: zipfile.ZipFile, name: str, content: bytes) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--commit", required=True, help="Source commit represented by the archive")
+    parser.add_argument("--commit", required=True, help="Repository commit represented by the archive")
     parser.add_argument("--output-dir", type=Path, default=ROOT / "dist")
     args = parser.parse_args()
 
     metadata = json.loads((ROOT / "corpus.json").read_text(encoding="utf-8"))
-    inventory_path = ROOT / metadata["source_inventory"]
-    inventory_bytes = inventory_path.read_bytes()
+    inventory_bytes = INVENTORY.read_bytes()
     inventory = json.loads(inventory_bytes)
     excluded = inventory["excluded"]
     source_files = inventory["source_files"]
 
     manifest = {
-        **metadata,
+        "version": metadata["version"],
         "upstream": inventory["upstream"],
+        "generator": inventory["generator"],
         "coverage": {
             "source_files": len(source_files),
             "included": len(source_files) - len(excluded),
@@ -58,19 +59,19 @@ def main() -> int:
         "source_inventory_sha256": hashlib.sha256(inventory_bytes).hexdigest(),
         "source": {
             "repository": "https://github.com/zbalkan/wazuh-rule-tests",
-            "content_commit": args.commit,
+            "commit": args.commit,
         },
         "generated_at": build_timestamp(),
     }
 
-    version = metadata["corpus_version"]
+    version = metadata["version"]
     args.output_dir.mkdir(parents=True, exist_ok=True)
     target = args.output_dir / f"wazuh-rule-tests-{version}.zip"
     manifest_path = args.output_dir / "manifest.json"
     manifest_bytes = (json.dumps(manifest, indent=2, sort_keys=True) + "\n").encode("utf-8")
     manifest_path.write_bytes(manifest_bytes)
 
-    members = [ROOT / "LICENSE", ROOT / "README.md", inventory_path]
+    members = [ROOT / "LICENSE", ROOT / "README.md", INVENTORY]
     members.extend(
         sorted(
             path

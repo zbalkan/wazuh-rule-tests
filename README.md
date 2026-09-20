@@ -1,6 +1,6 @@
 # wazuh-rule-tests
 
-`wazuh-rule-tests` is the versioned pytest regression corpus for built-in Wazuh rules and decoders.
+`wazuh-rule-tests` is the pytest regression corpus for built-in Wazuh rules and decoders.
 
 The test files are generated with [wazuh-testgen](https://github.com/zbalkan/wazuh-testgen) and then reviewed and corrected manually where generated expectations conflict with actual Wazuh behavior.
 
@@ -8,11 +8,12 @@ The corpus is content, not a Python package. Tests use the public [wazuhtester](
 
 ## Source provenance
 
-The test content was generated from the Wazuh `4.14.10` ruleset-testing snapshot:
+The source inventory is stored in `source/inventory.json`. It records the immutable upstream Wazuh commit and path used to generate the corpus, together with the `wazuh-testgen` commit.
+
+Current upstream source:
 
 ```text
 repository: https://github.com/wazuh/wazuh
-ref:        4.14.10
 commit:     eb4901c2d35f35aaa298463798b74704d569e4a6
 path:       ruleset/testing/tests
 ```
@@ -23,9 +24,7 @@ Generation uses `wazuh-testgen` at:
 b2c38d0c41b9e3792bab2eed61f1ec130fe8beb1
 ```
 
-The pinned source inventory is stored in `source/wazuh-4.14.10.json`.
-
-It contains 107 upstream INI files:
+The inventory contains 107 upstream INI files:
 
 ```text
 107 upstream INIs
@@ -39,7 +38,7 @@ The exclusions are intentional:
 - `unbound.ini` has all test conditions commented out upstream;
 - `win_application.ini` has all test conditions commented out upstream.
 
-`tools/validate_corpus.py` verifies this partition and fails if an included upstream INI has no generated pytest module, if a generated module has no source INI, or if its provenance marker is missing. The same source inventory also records the verified ruleset equivalence between Wazuh 4.14.7, 4.14.8, 4.14.9, and 4.14.10 across `ruleset/rules`, `ruleset/decoders`, and `ruleset/testing/tests`: 395 files with no differences at the recorded commits.
+`tools/validate_corpus.py` verifies the inventory partition, generated-module coverage, provenance markers, and public API dependency boundary. It does not infer compatibility from Wazuh branches, refs, source versions, or equivalence tables.
 
 ## Development use
 
@@ -69,41 +68,17 @@ The account running pytest must be able to access the Wazuh logtest socket, norm
 /var/ossec/queue/sockets/logtest
 ```
 
-## Compatibility
+## Version
 
-Compatibility is declared in `corpus.json`.
-
-The current corpus revision is:
+The current corpus version is:
 
 ```text
-4.14.7-r1
+4.14.7
 ```
 
-and is deliberately restricted to:
+This is also the Wazuh version used to qualify the release. There is no separate compatibility expression, qualification target, schema version, source version, or corpus revision suffix.
 
-```text
-Wazuh == 4.14.7
-```
-
-The generated content remains provenance-linked to the newer Wazuh `4.14.10` source snapshot. This is intentional: the recorded 4.14.7, 4.14.9, and 4.14.10 branch heads have identical rule, decoder, and ruleset-test content across all 395 relevant files. Wazuh 4.14.7 is therefore used as the first runtime qualification target because it is the earliest package target for which this exact corpus content is known to be applicable.
-
-The compatibility range remains exact until live qualification justifies broadening it.
-
-Corpus versions use:
-
-```text
-<Wazuh version>-r<corpus revision>
-```
-
-For example:
-
-```text
-4.14.7-r1
-4.14.7-r2
-4.15.0-r1
-```
-
-The revision increments when tests or corpus metadata change without changing the Wazuh qualification version.
+Source provenance is independent of this version and is recorded by immutable commit SHA in `source/inventory.json`.
 
 ## Releases
 
@@ -122,18 +97,15 @@ plus a SHA-256 checksum for the ZIP archive.
 The generated `manifest.json` records:
 
 - the corpus version;
-- the exact Wazuh compatibility requirement and qualification target;
-- the exact Wazuh upstream ref and commit;
+- the upstream Wazuh repository, commit, and source path;
 - the exact `wazuh-testgen` commit;
 - source/included/excluded counts;
 - a SHA-256 digest of the source inventory;
-- the exact `wazuh-rule-tests` content commit used to build the artifact.
+- the exact `wazuh-rule-tests` commit used to build the artifact.
 
-Release tags must match the `corpus_version` in `corpus.json`. The release workflow installs the declared Wazuh qualification target, executes the exact extracted release ZIP against `wazuh-logtest`, and only then creates the GitHub release.
+Release tags must match `version` in `corpus.json`. The release workflow installs that Wazuh version, executes the exact extracted release archive against `wazuh-logtest`, and only then creates the GitHub release.
 
-The first corpus release is gated on the availability of the Wazuh 4.14.7 Manager package and a successful live execution of the exact extracted release artifact against that package.
-
-Consumers such as `wazuh-devenv` should use the release manifest as the compatibility contract rather than inferring compatibility from the archive filename.
+Consumers such as `wazuh-devenv` should use the release manifest rather than inferring provenance from filenames.
 
 ## Ownership boundary
 
