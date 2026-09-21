@@ -28,13 +28,14 @@ The inventory contains 107 upstream INI files:
 
 ```text
 107 upstream INIs
- = 95 generated rule-test modules
- + 12 documented exclusions
+ = 94 generated rule-test modules
+ + 13 documented exclusions
 ```
 
 The exclusions are intentional:
 
 - ten `test_*.ini` files exercise regex, static-filter, or other ruleset-engine primitives rather than rule regression behavior;
+- `overwrite.ini` depends on test-only overwrite rules and decoders and is not a built-in rule regression;
 - `unbound.ini` has all test conditions commented out upstream;
 - `win_application.ini` has all test conditions commented out upstream.
 

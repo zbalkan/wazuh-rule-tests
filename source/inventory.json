@@ -129,6 +129,7 @@
     "test_static_filters.ini": "ruleset static-filter engine test, not a rule regression test",
     "test_static_filters_geoip.ini": "ruleset static-filter/GeoIP engine test, not a rule regression test",
     "unbound.ini": "all upstream test conditions are commented out",
-    "win_application.ini": "all upstream test conditions are commented out"
+    "win_application.ini": "all upstream test conditions are commented out",
+    "overwrite.ini": "depends on test-only overwrite rules and decoders, not built-in rule behavior"
   }
 }
