@@ -9,6 +9,9 @@ on:
 permissions:
   contents: write
 
+env:
+  WAZUHDEVENV_COMMIT: 3569a7439cacd3e911c8cafcd319fe5afdc4c37f
+
 jobs:
   qualify-and-release:
     runs-on: ubuntu-latest
@@ -35,6 +38,11 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
+      - name: Install wazuhdevenv
+        run: |
+          python -m pip install \
+            "git+https://github.com/zbalkan/wazuhdevenv.git@$WAZUHDEVENV_COMMIT"
+
       - name: Validate corpus
         run: python tools/validate_corpus.py
 
@@ -47,30 +55,16 @@ jobs:
           cd ..
           python -c "import glob,zipfile; zipfile.ZipFile(glob.glob('dist/*.zip')[0]).extractall('dist/qualified')"
 
-      - name: Install Wazuh manager
+      - name: Provision Wazuh development environment
+        env:
+          WAZUHDEVENV_HOME: ${{ runner.temp }}/wazuhdevenv
         run: |
-          sudo apt-get update
-          sudo apt-get install -y curl gnupg apt-transport-https
-          curl -fsSL https://packages.wazuh.com/key/GPG-KEY-WAZUH |
-            gpg --dearmor |
-            sudo tee /usr/share/keyrings/wazuh.gpg >/dev/null
-          echo "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main" |
-            sudo tee /etc/apt/sources.list.d/wazuh.list >/dev/null
-          sudo apt-get update
-          sudo apt-get install -y "wazuh-manager=$WAZUH_VERSION-1"
-          sudo systemctl enable --now wazuh-manager
+          workspace="$RUNNER_TEMP/wazuh-workspace"
+          mkdir -p "$workspace"
 
-      - name: Wait for wazuh-logtest
-        run: |
-          for attempt in $(seq 1 120); do
-            if sudo test -S /var/ossec/queue/sockets/logtest; then
-              exit 0
-            fi
-            sleep 1
-          done
-          sudo systemctl status wazuh-manager --no-pager || true
-          sudo journalctl -u wazuh-manager --no-pager -n 100 || true
-          exit 1
+          wazuhdevenv init "$workspace" \
+            --wazuh-version "$WAZUH_VERSION" \
+            --skip-corpus
 
       - name: Run live Wazuh regression corpus
         run: |
