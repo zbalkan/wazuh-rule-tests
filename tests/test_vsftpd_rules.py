@@ -14,28 +14,28 @@ pytestmark = pytest.mark.wazuh_logtest
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            'Wed Jul 27 18:32:27 2016 [pid 2] CONNECT: Client "fe80::baac:6fff:fe7d:d2e0"',
+            r'''Wed Jul 27 18:32:27 2016 [pid 2] CONNECT: Client "fe80::baac:6fff:fe7d:d2e0"''',
             'vsftpd',
             '11401',
             3,
             id='connect_1',
         ),
         pytest.param(
-            'Wed Jul 27 18:32:27 2016 [pid 2] CONNECT: Client "10.11.12.13"',
+            r'''Wed Jul 27 18:32:27 2016 [pid 2] CONNECT: Client "10.11.12.13"''',
             'vsftpd',
             '11401',
             3,
             id='connect_2',
         ),
         pytest.param(
-            'Mon Oct 24 11:32:53 2016 [pid 1] [$ALOC$] FAIL LOGIN: Client "10.55.112.101"',
+            r'''Mon Oct 24 11:32:53 2016 [pid 1] [$ALOC$] FAIL LOGIN: Client "10.55.112.101"''',
             'vsftpd',
             '11403',
             5,
             id='login_1',
         ),
         pytest.param(
-            'Mon Oct 24 11:32:53 2016 [pid 1] [$ALOC$] FAIL LOGIN: Client "fe80::baac:6fff:fe7d:d2e0"',
+            r'''Mon Oct 24 11:32:53 2016 [pid 1] [$ALOC$] FAIL LOGIN: Client "fe80::baac:6fff:fe7d:d2e0"''',
             'vsftpd',
             '11403',
             5,

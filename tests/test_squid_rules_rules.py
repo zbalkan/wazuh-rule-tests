@@ -14,14 +14,14 @@ pytestmark = pytest.mark.wazuh_logtest
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            '1140701044.525   1231 192.168.1.201 TCP_DENIED/400 1536 GET ahmet - NONE/- text/html',
+            r"""1140701044.525   1231 192.168.1.201 TCP_DENIED/400 1536 GET ahmet - NONE/- text/html""",
             'squid-accesslog',
             '35003',
             5,
             id='squid_bad_request_invalid_syntax',
         ),
         pytest.param(
-            '1140701230.827    781 192.168.1.210 TCP_DENIED/407 1785 GET http://www.ossec.net oahmet NONE/- text/html',
+            r"""1140701230.827    781 192.168.1.210 TCP_DENIED/407 1785 GET http://www.ossec.net oahmet NONE/- text/html""",
             'squid-accesslog',
             '35007',
             5,

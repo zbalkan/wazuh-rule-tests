@@ -14,28 +14,28 @@ pytestmark = pytest.mark.wazuh_logtest
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            'Aug 29 15:33:13 ns3 named[464]: client 217.148.39.3#1036: query (cache) denied',
+            r"""Aug 29 15:33:13 ns3 named[464]: client 217.148.39.3#1036: query (cache) denied""",
             'named',
             '12108',
             5,
             id='query_cache_denied_1',
         ),
         pytest.param(
-            'Aug 29 15:33:13 ns3 named[464]: client 217.148.39.4#32769: query (cache) denied',
+            r"""Aug 29 15:33:13 ns3 named[464]: client 217.148.39.4#32769: query (cache) denied""",
             'named',
             '12108',
             5,
             id='query_cache_denied_2',
         ),
         pytest.param(
-            'Aug 29 15:33:13 ns3 named[464]: client 217.148.39.3#1036: query (cache) denied',
+            r"""Aug 29 15:33:13 ns3 named[464]: client 217.148.39.3#1036: query (cache) denied""",
             'named',
             '12108',
             5,
             id='query_cache_denied_3',
         ),
         pytest.param(
-            'Aug 29 15:33:13 ns3 named[464]: client 217.148.39.3#1036: query (cache)',
+            r"""Aug 29 15:33:13 ns3 named[464]: client 217.148.39.3#1036: query (cache)""",
             'named',
             '12108',
             5,
@@ -61,7 +61,7 @@ def test_rule_match(
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            'Aug 29 15:33:13 ns3 name[464]: client 217.148.39.4#32769: query (cache) denied',
+            r"""Aug 29 15:33:13 ns3 name[464]: client 217.148.39.4#32769: query (cache) denied""",
             'named',
             '12108',
             5,

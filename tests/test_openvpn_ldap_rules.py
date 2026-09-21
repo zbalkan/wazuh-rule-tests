@@ -14,14 +14,14 @@ pytestmark = pytest.mark.wazuh_logtest
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            'Jan 28 14:25:49 VPN-SERVER-05892 openvpn: LDAP bind failed: Invalid credentials (80090308: LdapErr: DSID-55555555, comment: AcceptSecurityContext error, data 775, v3839)',
+            r"""Jan 28 14:25:49 VPN-SERVER-05892 openvpn: LDAP bind failed: Invalid credentials (80090308: LdapErr: DSID-55555555, comment: AcceptSecurityContext error, data 775, v3839)""",
             'openvpn',
             '81805',
             5,
             id='openvpn_ldap_bind_failed',
         ),
         pytest.param(
-            'Jan 28 14:25:49 VPN-SERVER-05892 openvpn: Incorrect password supplied for LDAP DN "CN=Harry T. Hacker,OU=business unit,OU=department,DC=domain,DC=com"',
+            r'''Jan 28 14:25:49 VPN-SERVER-05892 openvpn: Incorrect password supplied for LDAP DN "CN=Harry T. Hacker,OU=business unit,OU=department,DC=domain,DC=com"''',
             'openvpn',
             '81806',
             5,

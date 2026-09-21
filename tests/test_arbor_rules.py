@@ -14,14 +14,14 @@ pytestmark = pytest.mark.wazuh_logtest
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            'Sep 11 23:23:32 user arbor-networks-aps: Blocked Host: Blocked host xxx.xxx.xxx.xxx at hh:mm by Invalid Packets using TCP/23 (TELNET) destination yyy.yyy.yyy.yyy source port pppp,URL: http://web',
+            r"""Sep 11 23:23:32 user arbor-networks-aps: Blocked Host: Blocked host xxx.xxx.xxx.xxx at hh:mm by Invalid Packets using TCP/23 (TELNET) destination yyy.yyy.yyy.yyy source port pppp,URL: http://web""",
             'arbor',
             '88801',
             7,
             id='blocked_host_1',
         ),
         pytest.param(
-            'Sep 11 23:23:32 user arbor-networks-aps: Blocked Host: Blocked host xxx.xxx.xxx.xxx at hh:mm by TCP SYN Flood Detection using TCP/3306 (MYSQL) destination yyy.yyy.yyy.yyy source port ppp,URL: http://web',
+            r"""Sep 11 23:23:32 user arbor-networks-aps: Blocked Host: Blocked host xxx.xxx.xxx.xxx at hh:mm by TCP SYN Flood Detection using TCP/3306 (MYSQL) destination yyy.yyy.yyy.yyy source port ppp,URL: http://web""",
             'arbor',
             '88801',
             7,

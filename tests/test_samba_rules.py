@@ -14,14 +14,14 @@ pytestmark = pytest.mark.wazuh_logtest
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            'Dec 18 18:06:28 hostname smbd[832]: Denied connection from (192.168.3.23)',
+            r"""Dec 18 18:06:28 hostname smbd[832]: Denied connection from (192.168.3.23)""",
             'smbd',
             '13102',
             5,
             id='samba_denied_connect',
         ),
         pytest.param(
-            'Dec 18 18:06:28 hostname smbd[832]: Denied connection from (192.168.3.23)',
+            r"""Dec 18 18:06:28 hostname smbd[832]: Denied connection from (192.168.3.23)""",
             'smbd',
             '13102',
             5,
@@ -47,14 +47,14 @@ def test_rule_match(
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            'Dec 18 18:06:28 hostname smbd[17535]: Permission denied user not allowed to delete,  pause, or resume print job. User name: ahmet. Printer name: prnq1.',
+            r"""Dec 18 18:06:28 hostname smbd[17535]: Permission denied user not allowed to delete,  pause, or resume print job. User name: ahmet. Printer name: prnq1.""",
             'smbd',
             '13102',
             5,
             id='samba_permission_denied_1',
         ),
         pytest.param(
-            'Dec 18 18:06:28 hostname smbd[17535]: Permission denied\\-\\- user not allowed to delete,  pause, or resume print job. User name: ahmet. Printer name: prnq1.',
+            r"""Dec 18 18:06:28 hostname smbd[17535]: Permission denied\-\- user not allowed to delete,  pause, or resume print job. User name: ahmet. Printer name: prnq1.""",
             'smbd',
             '13102',
             5,

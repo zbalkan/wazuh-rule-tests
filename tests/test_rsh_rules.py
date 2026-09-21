@@ -14,7 +14,7 @@ pytestmark = pytest.mark.wazuh_logtest
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            'Dec 17 10:49:23 hostname rshd[347339]: Connection from 10.217.223.31 on illegal port',
+            r"""Dec 17 10:49:23 hostname rshd[347339]: Connection from 10.217.223.31 on illegal port""",
             'rshd',
             '2551',
             10,
@@ -40,7 +40,7 @@ def test_rule_match(
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            'Dec 17 10:49:23 hostname rhsd[347339]: Connection from 10.217.223.31 on illegal port',
+            r"""Dec 17 10:49:23 hostname rhsd[347339]: Connection from 10.217.223.31 on illegal port""",
             'rshd',
             '2551',
             10,

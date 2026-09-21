@@ -14,7 +14,7 @@ pytestmark = pytest.mark.wazuh_logtest
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            'Feb 14 06:29:39 hostname update.bad.phishing.sites: Phishing bad sites list updated',
+            r"""Feb 14 06:29:39 hostname update.bad.phishing.sites: Phishing bad sites list updated""",
             '',
             '3752',
             0,

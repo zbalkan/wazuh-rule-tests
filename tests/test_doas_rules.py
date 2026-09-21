@@ -14,28 +14,28 @@ pytestmark = pytest.mark.wazuh_logtest
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            'Apr 13 08:49:20 ix doas: failed command for ddp2: ls',
+            r"""Apr 13 08:49:20 ix doas: failed command for ddp2: ls""",
             'doas',
             '51554',
             5,
             id='failed_command',
         ),
         pytest.param(
-            'Mar 22 07:21:58 ix doas: ddp ran command /bin/ksh as root from /data/ddp/projects/git/sysconf/ossec/rules',
+            r"""Mar 22 07:21:58 ix doas: ddp ran command /bin/ksh as root from /data/ddp/projects/git/sysconf/ossec/rules""",
             'doas',
             '51556',
             2,
             id='command_run_as_root',
         ),
         pytest.param(
-            'Feb 29 14:58:39 ix doas: failed auth for ddp',
+            r"""Feb 29 14:58:39 ix doas: failed auth for ddp""",
             'doas',
             '51557',
             5,
             id='failed_auth',
         ),
         pytest.param(
-            'Aug 13 15:16:40 ix doas: ddp ran command as ddpnfs: ls',
+            r"""Aug 13 15:16:40 ix doas: ddp ran command as ddpnfs: ls""",
             'doas',
             '51555',
             1,

@@ -14,14 +14,14 @@ pytestmark = pytest.mark.wazuh_logtest
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            '2014/12/30 06:07:37 [error] PHP Warning: urlencode() expects parameter 1 to be string, array given in',
+            r"""2014/12/30 06:07:37 [error] PHP Warning: urlencode() expects parameter 1 to be string, array given in""",
             'nginx-errorlog',
             '31411',
             6,
             id='php_web_attack',
         ),
         pytest.param(
-            "2014/12/30 06:07:37 [error] PHP Fatal error:  require_once() [<a href='function.require'>function.require</a>]: Failed opening required 'includes/SkinTemplate.php'",
+            r"""2014/12/30 06:07:37 [error] PHP Fatal error:  require_once() [<a href='function.require'>function.require</a>]: Failed opening required 'includes/SkinTemplate.php'""",
             'nginx-errorlog',
             '31421',
             5,

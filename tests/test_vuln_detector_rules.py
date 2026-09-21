@@ -14,7 +14,7 @@ pytestmark = pytest.mark.wazuh_logtest
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            '{"vulnerability":{"package":{"name":"ncurses","version":"5.9-14.20130511.el7_4","architecture":"x86_64"},"cve":"CVE-2019-17594", "status":"Solved", "reference":"fb783b1c771a643f81259a93248e7f61e9a4a597"}}',
+            r"""{"vulnerability":{"package":{"name":"ncurses","version":"5.9-14.20130511.el7_4","architecture":"x86_64"},"cve":"CVE-2019-17594", "status":"Solved", "reference":"fb783b1c771a643f81259a93248e7f61e9a4a597"}}""",
             'json',
             '23502',
             3,
@@ -40,7 +40,7 @@ def test_rule_match(
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            '{"vulnerability":{"package":{"name":"ncurses","version":"5.9-14.20130511.el7_4","architecture":"x86_64"},"cve":"", "status":"Solved", "reference":"fb783b1c771a643f81259a93248e7f61e9a4a597"}}',
+            r"""{"vulnerability":{"package":{"name":"ncurses","version":"5.9-14.20130511.el7_4","architecture":"x86_64"},"cve":"", "status":"Solved", "reference":"fb783b1c771a643f81259a93248e7f61e9a4a597"}}""",
             'json',
             '23502',
             3,

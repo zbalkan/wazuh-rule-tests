@@ -14,7 +14,7 @@ pytestmark = pytest.mark.wazuh_logtest
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            'Dec 18 18:06:28 hostname cimserver[18575]: PGS17200: Authentication failed for user jones_b.',
+            r"""Dec 18 18:06:28 hostname cimserver[18575]: PGS17200: Authentication failed for user jones_b.""",
             'cimserver',
             '9610',
             5,
@@ -40,7 +40,7 @@ def test_rule_match(
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            'Dec 18 18:06:29 hostname vimserver[18575]: PGS17200: Authentication failed for user domain\\jones_b.',
+            r"""Dec 18 18:06:29 hostname vimserver[18575]: PGS17200: Authentication failed for user domain\jones_b.""",
             'cimserver',
             '9610',
             5,

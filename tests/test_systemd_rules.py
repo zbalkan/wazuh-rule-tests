@@ -14,14 +14,14 @@ pytestmark = pytest.mark.wazuh_logtest
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            'Jul 19 07:28:02 localhost systemd: Failed to mark scope session-1024.scope as abandoned : Stale file handle',
+            r"""Jul 19 07:28:02 localhost systemd: Failed to mark scope session-1024.scope as abandoned : Stale file handle""",
             'systemd',
             '40701',
             0,
             id='stale_file_handle',
         ),
         pytest.param(
-            'Aug 13 13:20:58 master systemd: Time has been changed',
+            r"""Aug 13 13:20:58 master systemd: Time has been changed""",
             'systemd',
             '40705',
             5,

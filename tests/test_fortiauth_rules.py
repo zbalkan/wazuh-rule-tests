@@ -14,28 +14,28 @@ pytestmark = pytest.mark.wazuh_logtest
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            '2021-07-08T11:01:06-03:00 XXX.XXX.XXX.XXX db[32167]:  category="Event" subcategory="Authentication" typeid=20299 level="information" user="user2" nas="XXX.XXX.XXX.XXX" action="Authentication" status="Pending" Remote RADIUS user authentication partially done, remote server expecting challenge response',
+            r"""2021-07-08T11:01:06-03:00 XXX.XXX.XXX.XXX db[32167]:  category="Event" subcategory="Authentication" typeid=20299 level="information" user="user2" nas="XXX.XXX.XXX.XXX" action="Authentication" status="Pending" Remote RADIUS user authentication partially done, remote server expecting challenge response""",
             'fortiauth',
             '44732',
             4,
             id='fortiauth_pending_authentication',
         ),
         pytest.param(
-            '2021-07-08T11:00:56-03:00 XXX.XXX.XXX.XXX db[31013]:  category="Event" subcategory="Authentication" typeid=20001 level="information" user="user1" nas="XXX.XXX.XXX.XXX" action="Authentication" status="Failed" Remote RADIUS user authentication with invalid token',
+            r"""2021-07-08T11:00:56-03:00 XXX.XXX.XXX.XXX db[31013]:  category="Event" subcategory="Authentication" typeid=20001 level="information" user="user1" nas="XXX.XXX.XXX.XXX" action="Authentication" status="Failed" Remote RADIUS user authentication with invalid token""",
             'fortiauth',
             '44733',
             7,
             id='fortiauth_failed_authentication',
         ),
         pytest.param(
-            '2021-07-08T11:00:56-03:00 XXX.XXX.XXX.XXX db[31013]:  category="Event" subcategory="Authentication" typeid=20001 level="information" user="user1" nas="XXX.XXX.XXX.XXX" action="Authentication" status="Success" Remote RADIUS user authentication with no token successful',
+            r"""2021-07-08T11:00:56-03:00 XXX.XXX.XXX.XXX db[31013]:  category="Event" subcategory="Authentication" typeid=20001 level="information" user="user1" nas="XXX.XXX.XXX.XXX" action="Authentication" status="Success" Remote RADIUS user authentication with no token successful""",
             'fortiauth',
             '44734',
             3,
             id='fortiauth_successful_authentication',
         ),
         pytest.param(
-            '2021-07-08T11:01:03-03:00 XXX.XXX.XXX.XXX db[32167]:  category="Event" subcategory="System" typeid=30101 level="information" user="admin" nas="" action="" status="" RADIUS server running in full edition',
+            r"""2021-07-08T11:01:03-03:00 XXX.XXX.XXX.XXX db[32167]:  category="Event" subcategory="System" typeid=30101 level="information" user="admin" nas="" action="" status="" RADIUS server running in full edition""",
             'fortiauth',
             '44735',
             4,

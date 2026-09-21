@@ -14,21 +14,21 @@ pytestmark = pytest.mark.wazuh_logtest
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            "Jul 18 10:51:43 localhost firewalld: 2014-07-18 10:51:43 ERROR: '/sbin/iptables -D INPUT_ZONES -t filter -i enp1s0 -g IN_public' failed: iptables: No chain/target/match by that name.",
+            r"""Jul 18 10:51:43 localhost firewalld: 2014-07-18 10:51:43 ERROR: '/sbin/iptables -D INPUT_ZONES -t filter -i enp1s0 -g IN_public' failed: iptables: No chain/target/match by that name.""",
             '',
             '40902',
             3,
             id='incorrect_chain_target_match',
         ),
         pytest.param(
-            "Jul 18 10:51:43 localhost firewalld: 2014-07-18 10:51:43 ERROR: COMMAND_FAILED: '/sbin/iptables -D INPUT_ZONES -t filter -i enp1s0 -g IN_public' failed: iptables: No chain/target/match by that name.",
+            r"""Jul 18 10:51:43 localhost firewalld: 2014-07-18 10:51:43 ERROR: COMMAND_FAILED: '/sbin/iptables -D INPUT_ZONES -t filter -i enp1s0 -g IN_public' failed: iptables: No chain/target/match by that name.""",
             '',
             '40902',
             3,
             id='incorrect_chain_target_match',
         ),
         pytest.param(
-            'Jul 18 11:04:51 localhost firewalld: 2014-07-18 11:04:51 ERROR: ZONE_ALREADY_SET',
+            r"""Jul 18 11:04:51 localhost firewalld: 2014-07-18 11:04:51 ERROR: ZONE_ALREADY_SET""",
             '',
             '40903',
             2,

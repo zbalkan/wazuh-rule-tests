@@ -14,7 +14,7 @@ pytestmark = pytest.mark.wazuh_logtest
     ("log", "decoder", "rule_id", "rule_level"),
     [
         pytest.param(
-            '{ "user": "root" }',
+            r"""{ "user": "root" }""",
             'json',
             '999286',
             3,
