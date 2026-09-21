@@ -62,6 +62,13 @@ pytestmark = pytest.mark.wazuh_logtest
             0,
             id='iptables_ufw_block_2',
         ),
+        pytest.param(
+            r"""Sep 20 15:52:00 managerHost kernel: [ 2870.303541] [UFW AUDIT] IN= OUT=ppp0 SRC=117.197.243.67 DST=218.248.255.163 LEN=62 TOS=0x00 PREC=0x00 TTL=64 ID=52751 DF PROTO=UDP SPT=57548 DPT=53 LEN=42""",
+            'kernel',
+            '4100',
+            0,
+            id='iptables_ufw_audit',
+        ),
     ],
 )
 def test_rule_match(
