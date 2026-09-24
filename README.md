@@ -74,7 +74,7 @@ The account running pytest must be able to access the Wazuh logtest socket, norm
 The current corpus version is:
 
 ```text
-4.14.7
+4.14.8
 ```
 
 This is also the Wazuh version used to qualify the release. There is no separate compatibility expression, qualification target, schema version, source version, or corpus revision suffix.
