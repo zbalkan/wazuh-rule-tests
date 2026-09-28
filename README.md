@@ -2,13 +2,13 @@
 
 `wazuh-rule-tests` is the pytest regression corpus for built-in Wazuh rules and decoders.
 
-The test files are generated with [wazuh-testgen](https://github.com/zbalkan/wazuh-testgen) and then reviewed and corrected manually where generated expectations conflict with actual Wazuh behavior.
+The test files are generated with [wazuhtestgen](https://github.com/zbalkan/wazuhtestgen) and then reviewed and corrected manually where generated expectations conflict with actual Wazuh behavior.
 
 The corpus is content, not a Python package. Tests use the public [wazuhtester](https://github.com/zbalkan/wazuhtester) API and require a running Wazuh manager with a reachable `wazuh-logtest` Unix socket.
 
 ## Source provenance
 
-The source inventory is stored in `source/inventory.json`. It records the immutable upstream Wazuh commit and path used to generate the corpus, together with the `wazuh-testgen` commit.
+The source inventory is stored in `source/inventory.json`. It records the immutable upstream Wazuh commit and path used to generate the corpus, together with the `wazuhtestgen` commit.
 
 Current upstream source:
 
@@ -18,7 +18,7 @@ commit:     eb4901c2d35f35aaa298463798b74704d569e4a6
 path:       ruleset/testing/tests
 ```
 
-Generation uses `wazuh-testgen` at:
+Generation uses `wazuhtestgen` at:
 
 ```text
 b2c38d0c41b9e3792bab2eed61f1ec130fe8beb1
@@ -99,18 +99,18 @@ The generated `manifest.json` records:
 
 - the corpus version;
 - the upstream Wazuh repository, commit, and source path;
-- the exact `wazuh-testgen` commit;
+- the exact `wazuhtestgen` commit;
 - source/included/excluded counts;
 - a SHA-256 digest of the source inventory;
 - the exact `wazuh-rule-tests` commit used to build the artifact.
 
 Release tags must match `version` in `corpus.json`. The release workflow installs that Wazuh version, executes the exact extracted release archive against `wazuh-logtest`, and only then creates the GitHub release.
 
-Consumers such as `wazuh-devenv` should use the release manifest rather than inferring provenance from filenames.
+Consumers such as `wazuhdevenv` should use the release manifest rather than inferring provenance from filenames.
 
 ## Ownership boundary
 
-This repository owns expected Wazuh rule and decoder behavior. Environment preparation belongs to `wazuh-devenv`, logtest protocol handling belongs to `wazuhtester`, and test generation belongs to `wazuh-testgen`.
+This repository owns expected Wazuh rule and decoder behavior. Environment preparation belongs to `wazuhdevenv`, logtest protocol handling belongs to `wazuhtester`, and test generation belongs to `wazuhtestgen`.
 
 ## License
 
