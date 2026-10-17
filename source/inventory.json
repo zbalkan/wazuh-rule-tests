@@ -1,7 +1,7 @@
 {
   "upstream": {
     "repository": "https://github.com/wazuh/wazuh",
-    "commit": "eb4901c2d35f35aaa298463798b74704d569e4a6",
+    "commit": "bed556db3f4f535cb3a585f3d9e7f35a6acf0f58",
     "path": "ruleset/testing/tests"
   },
   "generator": {

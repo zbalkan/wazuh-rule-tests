@@ -14,7 +14,7 @@ Current upstream source:
 
 ```text
 repository: https://github.com/wazuh/wazuh
-commit:     eb4901c2d35f35aaa298463798b74704d569e4a6
+commit:     bed556db3f4f535cb3a585f3d9e7f35a6acf0f58
 path:       ruleset/testing/tests
 ```
 
@@ -28,13 +28,13 @@ The inventory contains 107 upstream INI files:
 
 ```text
 107 upstream INIs
- = 94 generated rule-test modules
- + 13 documented exclusions
+ = 93 generated rule-test modules
+ + 14 documented exclusions
 ```
 
 The exclusions are intentional:
 
-- ten `test_*.ini` files exercise regex, static-filter, or other ruleset-engine primitives rather than rule regression behavior;
+- ten `test_*.ini` files and `user.ini` exercise regex, static-filter, or other ruleset-engine primitives rather than rule regression behavior;
 - `overwrite.ini` depends on test-only overwrite rules and decoders and is not a built-in rule regression;
 - `unbound.ini` has all test conditions commented out upstream;
 - `win_application.ini` has all test conditions commented out upstream.
@@ -74,7 +74,7 @@ The account running pytest must be able to access the Wazuh logtest socket, norm
 The current corpus version is:
 
 ```text
-4.14.8
+4.14.9
 ```
 
 This is also the Wazuh version used to qualify the release. There is no separate compatibility expression, qualification target, schema version, source version, or corpus revision suffix.
