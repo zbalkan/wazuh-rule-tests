@@ -104,7 +104,7 @@ The generated `manifest.json` records:
 - a SHA-256 digest of the source inventory;
 - the exact `wazuh-rule-tests` commit used to build the artifact.
 
-Release tags must match `version` in `corpus.json`. The release workflow installs that Wazuh version, executes the exact extracted release archive against `wazuh-logtest`, and only then creates the GitHub release.
+Run the release workflow manually from `main`; no manual tag is required. The workflow derives the release tag from `version` in `corpus.json`, refuses an existing version tag or release, installs that Wazuh version, and executes the exact extracted release archive against `wazuh-logtest`. Only after qualification succeeds does it create the GitHub release and its tag, pointing to the qualified commit.
 
 Consumers such as `wazuhdevenv` should use the release manifest rather than inferring provenance from filenames.
 
