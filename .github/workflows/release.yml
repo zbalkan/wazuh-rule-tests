@@ -7,7 +7,7 @@ permissions:
   contents: write
 
 env:
-  WAZUHDEVENV_COMMIT: 3569a7439cacd3e911c8cafcd319fe5afdc4c37f
+  WAZUHDEVENV_COMMIT: 892b7548c1c961ecdba7db948f9c09280d341821
 
 concurrency:
   group: corpus-release
